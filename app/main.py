@@ -19,7 +19,8 @@ app = FastAPI(
 def integrity_exception_hnadler(request: Request, exc: IntegrityError):
     return JSONResponse(
         status_code=400,
-        content={"detail": "Error de integridad: Verifica que los datos realcionados existan o no esten duplicaddos"}
+        content={
+            "detail": "Error de integridad: Verifica que los datos realcionados existan o no esten duplicaddos"}
     )
 
 
