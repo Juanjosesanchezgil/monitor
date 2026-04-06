@@ -1,12 +1,26 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from app import models, schemas, database
 from typing import List
+from sqlalchemy.exc import IntegrityError
+from fastapi.responses import JSONResponse
 
 # Crear tablas
 models.Base.metadata.create_all(bind=database.engine)
 
-app = FastAPI()
+app = FastAPI(
+    title="Sistema de Inventario Pro",
+    description="API para gestion de repuestos y categorias con persistencia SQL",
+    version="1.0.0"
+)
+
+
+@app.exception_handler(IntegrityError)
+def integrity_exception_hnadler(request: Request, exc: IntegrityError):
+    return JSONResponse(
+        status_code=400,
+        content={"detail": "Error de integridad: Verifica que los datos realcionados existan o no esten duplicaddos"}
+    )
 
 
 # Dependencia de DB
